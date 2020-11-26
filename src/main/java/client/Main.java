@@ -35,7 +35,7 @@ public class Main {
                 .build();
 
         ORMInitializerDefault ormInitializer = new ORMInitializerDefault();
-        ormInitializer.initialize(packagePath, databaseConfiguration);
+//        ormInitializer.initialize(packagePath, databaseConfiguration);
 
 
         ///////////////////////////////////////////////////////////////////////////////

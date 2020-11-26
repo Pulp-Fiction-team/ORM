@@ -20,25 +20,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class DataBaseMetadataBuilderImpl implements DataBaseMetadataBuilder {
+public abstract class DataBaseMetadataBuilderImpl implements DataBaseMetadataBuilder {
 
     private final DatabaseConfiguration databaseConfiguration;
-    private final List<ClassLoader> classLoadersList = new LinkedList<>();
 
     public DataBaseMetadataBuilderImpl(DatabaseConfiguration databaseConfiguration) {
         this.databaseConfiguration = databaseConfiguration;
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
     }
 
     @Override
     public Database build(String packagePath) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
-                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packagePath))));
-        Set<Class<?>> allClasses =
-                reflections.getSubTypesOf(Object.class);
+        Set<Class<?>> allClasses = getEntityClasses(packagePath);
         List<jar.model.Table> tables = allClasses.stream()
                 .filter(clazz -> {
                     Table[] tablesAnnotations = clazz.getDeclaredAnnotationsByType(Table.class);
@@ -104,4 +96,14 @@ public class DataBaseMetadataBuilderImpl implements DataBaseMetadataBuilder {
                 .tables(tables)
                 .build();
     }
+
+    public abstract Set<Class<?>> getEntityClasses(String packagePath);
+//        Reflections reflections = new Reflections(new ConfigurationBuilder()
+//                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+//                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+//                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(packagePath))));
+//        Set<Class<?>> allClasses =
+//                reflections.getSubTypesOf(Object.class);
+//        return allClasses;
+//    }
 }

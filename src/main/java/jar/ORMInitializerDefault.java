@@ -13,8 +13,8 @@ import java.util.Properties;
 
 public class ORMInitializerDefault implements ORMInitializer{
     @Override
-    public void initialize(String packagePath, DatabaseConfiguration configuration) throws SQLException {
-        DataBaseMetadataBuilder dataBaseMetadataBuilder = new DataBaseMetadataBuilderImpl(configuration);
+    public void initialize(String packagePath, DatabaseConfiguration configuration,
+                           DataBaseMetadataBuilder dataBaseMetadataBuilder) throws SQLException {
         Database database = dataBaseMetadataBuilder.build(packagePath);
         DatabaseMetadataHolder databaseMetadataHolder = DatabaseMetadataHolder.getInstance();
         databaseMetadataHolder.setDatabase(database);

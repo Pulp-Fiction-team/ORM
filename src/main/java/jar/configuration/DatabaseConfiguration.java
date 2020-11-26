@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 @Data
@@ -18,6 +20,7 @@ public class DatabaseConfiguration {
     private String url;
     private String user;
     private String password;
+    private List<ClassLoader> classLoadersList = new LinkedList<>();
 
     private Properties additionalProperties;
 
